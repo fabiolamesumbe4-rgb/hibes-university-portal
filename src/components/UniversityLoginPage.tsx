@@ -1,4 +1,5 @@
-import React, { useState, FormEvent, ChangeEvent } from "react";
+import React, { useState } from "react";
+import type {FormEvent, ChangeEvent } from "react";
 import { Mail, Lock, Eye, EyeOff, GraduationCap, ShieldCheck } from "lucide-react";
 
 
