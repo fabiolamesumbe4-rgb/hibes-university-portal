@@ -1,16 +1,6 @@
-import React from "react";
 import { GraduationCap, Clock, MapPin } from "lucide-react";
 
-/**
- * ─────────────────────────────────────────────────────────────────────────
- * STUDENT DASHBOARD (mock)
- * ─────────────────────────────────────────────────────────────────────────
- * Placeholder content only — real data (GPA, schedule) gets wired in later.
- * Rendered inside <AppLayout>, so no sidebar/header logic lives here.
- * ─────────────────────────────────────────────────────────────────────────
- */
 
-// Placeholder schedule data — replace with a real fetch later.
 const TODAYS_CLASSES = [
   { course: "Business Statistics II", time: "9:00 AM – 10:30 AM", room: "Hall B, Room 214" },
   { course: "Software Engineering Principles", time: "11:00 AM – 12:30 PM", room: "Engineering Block, Lab 3" },

@@ -1,16 +1,6 @@
-import React from "react";
 import { Activity, Server, Users, ShieldCheck, UserPlus, Settings2 } from "lucide-react";
 
-/**
- * ─────────────────────────────────────────────────────────────────────────
- * ADMIN DASHBOARD (mock)
- * ─────────────────────────────────────────────────────────────────────────
- * Placeholder content only — real system metrics/user data get wired in later.
- * Rendered inside <AppLayout>, so no sidebar/header logic lives here.
- * ─────────────────────────────────────────────────────────────────────────
- */
 
-// Placeholder metrics — replace with real monitoring data later.
 const SYSTEM_METRICS = [
   { label: "System Uptime", value: "99.98%", icon: Activity },
   { label: "Active Sessions", value: "1,204", icon: Users },
@@ -27,7 +17,7 @@ const QUICK_ACTIONS = [
 export default function AdminDashboard() {
   return (
     <div className="mx-auto max-w-5xl">
-      {/* Greeting */}
+      {}
       <h1 className="font-serif text-2xl text-[#3B1160] sm:text-3xl">
         Welcome back, Admin
       </h1>
@@ -35,7 +25,7 @@ export default function AdminDashboard() {
         Here's the current state of the portal.
       </p>
 
-      {/* System health metrics */}
+      {}
       <div className="mt-8">
         <h2 className="text-sm font-medium uppercase tracking-[0.14em] text-[#6B5C7A]">
           System Health
@@ -56,7 +46,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* User management quick actions */}
+      {}
       <div className="mt-8">
         <h2 className="text-sm font-medium uppercase tracking-[0.14em] text-[#6B5C7A]">
           User Management
