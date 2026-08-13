@@ -1,17 +1,8 @@
 import { BookOpen, ClipboardCheck } from "lucide-react";
+import FacultyGradingPortal from "./FacultyGradingPortal";
 
-/**
- * ─────────────────────────────────────────────────────────────────────────
- * FACULTY DASHBOARD (mock)
- * ─────────────────────────────────────────────────────────────────────────
- * Placeholder content only — real course/grading data gets wired in later.
- * Rendered inside <AppLayout>, so no sidebar/header logic lives here.
- * ─────────────────────────────────────────────────────────────────────────
- */
-
-// Placeholder data — replace with real fetches later.
 const ACTIVE_COURSES = [
-  { code: "BUS 301", name: "Business Statistics II", students: 42 },
+  { code: "BUS 301", name: "Engineering Maths", students: 42 },
   { code: "ENG 214", name: "Software Engineering Principles", students: 35 },
   { code: "BUS 110", name: "Introduction to Accounting", students: 58 },
   { code: "ENG 220", name: "Database Systems", students: 29 },
@@ -26,15 +17,15 @@ const PENDING_GRADES = [
 export default function FacultyDashboard() {
   return (
     <div className="mx-auto max-w-5xl">
-      {/* Greeting */}
+      {}
       <h1 className="font-serif text-2xl text-[#3B1160] sm:text-3xl">
-        Welcome back, Prof. Etame
+        Welcome back, Prof. Mesumbe
       </h1>
       <p className="mt-1 text-sm text-[#6B5C7A]">
         Here's an overview of your courses and outstanding work.
       </p>
 
-      {/* Active courses grid */}
+      {}
       <div className="mt-8">
         <h2 className="text-sm font-medium uppercase tracking-[0.14em] text-[#6B5C7A]">
           Active Courses
@@ -64,7 +55,7 @@ export default function FacultyDashboard() {
         </div>
       </div>
 
-      {/* Pending grades to approve */}
+      {}
       <div className="mt-8">
         <h2 className="text-sm font-medium uppercase tracking-[0.14em] text-[#6B5C7A]">
           Pending Grades to Approve
@@ -84,8 +75,14 @@ export default function FacultyDashboard() {
               </span>
             </div>
           ))}
+          <FacultyGradingPortal />
         </div>
+      </div>
+      {}
+      <div className="mt-8">
+        <FacultyGradingPortal />
       </div>
     </div>
   );
 }
+

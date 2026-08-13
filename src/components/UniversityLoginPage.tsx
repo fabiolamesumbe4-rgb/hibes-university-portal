@@ -1,15 +1,35 @@
-import React, { useState } from "react";
-import type {FormEvent, ChangeEvent } from "react";
+import { useState } from "react";
+import type { FormEvent, ChangeEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, GraduationCap, ShieldCheck } from "lucide-react";
+import { useAuth } from "./AuthContext";
+import type { UserRole } from "./AuthContext";
 
+/**
+ * ─────────────────────────────────────────────────────────────────────────
+ * HIBES PORTAL — LOGIN PAGE
+ * Higher Institute of Business and Engineering Science, Buea
+ * ─────────────────────────────────────────────────────────────────────────
+ * Now wired to real routing/auth: a successful submit calls the shared
+ * AuthContext's `login(role)` — which flips `isAuthenticated` to true and
+ * records the chosen role — then navigates to /dashboard. From that point
+ * on, every protected route and the sidebar/header shell all see the
+ * logged-in state automatically, since they all read from the same
+ * AuthContext this page just updated.
+ *
+ * This is still MOCK auth: any syntactically valid email + password of
+ * at least 8 characters is accepted — there's no real backend check yet.
+ * Swap the inside of handleSubmit's success branch for a real API call
+ * later; everything downstream (routing, role-gating) stays the same.
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 
 const ROLES = ["Student", "Professor", "Admin"] as const;
-type Role = (typeof ROLES)[number];
 
 interface FormState {
   email: string;
   password: string;
-  role: Role;
+  role: UserRole;
 }
 
 interface FormErrors {
@@ -17,27 +37,25 @@ interface FormErrors {
   password?: string;
 }
 
-// Very small, dependency-free email check. Good enough for client-side UX;
-// the server should always re-validate.
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_PASSWORD_LENGTH = 8;
 
 export default function UniversityLoginPage() {
-  // ── Form state ──────────────────────────────────────────────────────
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
   const [form, setForm] = useState<FormState>({
     email: "",
     password: "",
     role: "Student",
   });
 
-  
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<FormErrors>({});
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  // ── Validation ──────────────────────────────────────────────────────
   function validate(values: FormState): FormErrors {
     const next: FormErrors = {};
 
@@ -56,14 +74,11 @@ export default function UniversityLoginPage() {
     return next;
   }
 
-  // ── Handlers ────────────────────────────────────────────────────────
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     const nextForm = { ...form, [name]: value };
     setForm(nextForm);
 
-    // Live re-validate only fields that have already been touched, so
-    // errors clear/update as the user fixes them instead of feeling static.
     if (touched[name]) {
       setErrors(validate(nextForm));
     }
@@ -75,7 +90,7 @@ export default function UniversityLoginPage() {
     setErrors(validate(form));
   }
 
-  function handleRoleSelect(role: Role) {
+  function handleRoleSelect(role: UserRole) {
     setForm((prev) => ({ ...prev, role }));
   }
 
@@ -93,17 +108,15 @@ export default function UniversityLoginPage() {
     setIsSubmitting(true);
     setSubmitSuccess(false);
 
-    // Mock async submit — replace with your real auth call
-    // (fetch / axios / your API client) at this point.
+    // Mock async login check — replace with a real API call later. On
+    // success, call login(role) to update AuthContext, then navigate to
+    // the protected app. Everything after this point (routing, sidebar,
+    // role-gated pages) picks up the new auth state automatically.
     window.setTimeout(() => {
-      // eslint-disable-next-line no-console
-      console.log("Login submitted:", {
-        email: form.email.trim(),
-        password: form.password, // NOTE: never actually log passwords in production
-        role: form.role,
-      });
       setIsSubmitting(false);
       setSubmitSuccess(true);
+      login(form.role);
+      navigate("/dashboard");
     }, 700);
   }
 
@@ -137,17 +150,13 @@ export default function UniversityLoginPage() {
             use the credentials issued by the Office of the Registrar.
           </p>
 
-          {/* Success banner */}
           {submitSuccess && (
             <div
               role="status"
               className="mt-6 flex items-start gap-2 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800"
             >
               <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0" />
-              <span>
-                Credentials verified locally. Check your console — this demo
-                does not perform a real sign-in.
-              </span>
+              <span>Signed in — redirecting to your dashboard…</span>
             </div>
           )}
 
@@ -228,7 +237,7 @@ export default function UniversityLoginPage() {
                 </label>
                 <a
                   href="#forgot-password"
-                  className="text-xs font-medium text-[#8A4FC9] hover:text-[#3B1160] hover:underline"
+                  className="text-xs font-medium text-[#8A5A2B] hover:text-[#3B1160] hover:underline"
                 >
                   Forgot password?
                 </a>
@@ -284,12 +293,11 @@ export default function UniversityLoginPage() {
             </button>
           </form>
 
-          {/* Help desk link */}
-          <p className="mt-8 text-center text-xs text-[#8A7A99]">
+          <p className="mt-8 text-center text-xs text-[#8A8272]">
             Trouble signing in?{" "}
             <a
               href="#help-desk"
-              className="font-medium text-[#8A4FC9] hover:text-[#3B1160] hover:underline"
+              className="font-medium text-[#8A5A2B] hover:text-[#3B1160] hover:underline"
             >
               Contact the IT Help Desk
             </a>
@@ -301,7 +309,6 @@ export default function UniversityLoginPage() {
           RIGHT — BRANDING PANE (hidden on mobile / small tablets)
          ══════════════════════════════════════════════════════════════ */}
       <div className="relative hidden lg:flex lg:w-[54%] overflow-hidden bg-[#3B1160]">
-        {/* Faint blueprint-style grid, evoking a campus map */}
         <div
           className="absolute inset-0 opacity-[0.14]"
           style={{
@@ -310,7 +317,6 @@ export default function UniversityLoginPage() {
             backgroundSize: "44px 44px",
           }}
         />
-        {/* Radial glow behind the seal */}
         <div
           className="absolute left-1/2 top-1/2 h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-30"
           style={{
@@ -320,7 +326,6 @@ export default function UniversityLoginPage() {
         />
 
         <div className="relative z-10 flex w-full flex-col justify-between p-14 xl:p-20">
-          {/* Top: institution wordmark */}
           <div className="flex items-center gap-3 text-white">
             <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/40">
               <GraduationCap className="h-5 w-5" strokeWidth={1.75} />
@@ -330,7 +335,6 @@ export default function UniversityLoginPage() {
             </span>
           </div>
 
-          {/* Middle: seal / signature element */}
           <div className="flex flex-col items-start">
             <svg
               width="128"
@@ -341,25 +345,10 @@ export default function UniversityLoginPage() {
             >
               <circle cx="64" cy="64" r="62" stroke="currentColor" strokeWidth="1" opacity="0.5" />
               <circle cx="64" cy="64" r="50" stroke="currentColor" strokeWidth="1" opacity="0.7" />
-              <text
-                x="64"
-                y="60"
-                textAnchor="middle"
-                fontFamily="serif"
-                fontSize="26"
-                fill="#FFFFFF"
-              >
+              <text x="64" y="60" textAnchor="middle" fontFamily="serif" fontSize="26" fill="#FFFFFF">
                 HIBES
               </text>
-              <text
-                x="64"
-                y="78"
-                textAnchor="middle"
-                fontFamily="serif"
-                fontSize="8"
-                letterSpacing="2"
-                fill="#C9A9E0"
-              >
+              <text x="64" y="78" textAnchor="middle" fontFamily="serif" fontSize="8" letterSpacing="2" fill="#C9A9E0">
                 BUEA
               </text>
             </svg>
@@ -374,7 +363,6 @@ export default function UniversityLoginPage() {
             </p>
           </div>
 
-          {/* Bottom: quiet status line */}
           <div className="flex items-center gap-2 text-xs text-[#C3AEDC]">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
             Portal systems operational

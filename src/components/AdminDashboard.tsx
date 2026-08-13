@@ -1,5 +1,5 @@
 import { Activity, Server, Users, ShieldCheck, UserPlus, Settings2 } from "lucide-react";
-
+import AdminUserManagement from "./AdminUserManagement";
 
 const SYSTEM_METRICS = [
   { label: "System Uptime", value: "99.98%", icon: Activity },
@@ -65,6 +65,7 @@ export default function AdminDashboard() {
               <span className="text-sm font-medium text-[#3B1160]">{label}</span>
             </button>
           ))}
+          <AdminUserManagement />
         </div>
       </div>
     </div>
